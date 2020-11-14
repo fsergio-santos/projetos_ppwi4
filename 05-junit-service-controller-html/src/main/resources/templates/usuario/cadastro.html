@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cadastro Usuário</title>
+</head>
+<body>
+
+  <form action="/usuario/incluir" method="POST" th:object="${usuario}">
+  
+  		<label>Nome:</label>
+  		<input type="text" id="username" name="username"/>
+  		<br/>
+  		<label>E-mail</label>
+  		<input type="text" id="email" name="email"/>
+  		<br/>
+  		<label>Senha:</label>
+  		<input type="text" id="password" name="password"/>
+  		<br/>
+  		<label>Confirma Senha:</label>
+  		<input type="text" id="confirmPassword" name="confirmPassword"/>
+  		<br/>
+  		<button>Inserir</button>
+  
+  </form>
+
+
+
+
+
+
+</body>
+</html>
