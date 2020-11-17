@@ -1,13 +1,17 @@
 
-INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA DE SÃO PAULO - BIRIGUI - SP.
+Instituto Federal de Educação, Ciência e Tecnologia de São Paulo - Birigui - sp.
 
-PROJETO DESENVOLVIDO PARA A DISCIPLINA PROGRAMAÇÃO PARA WEB DO CURSO DE TECNOLOGIA EM SISTEMAS PARA INTERNET
+Projeto desenvolvido para a disciplina Programação para Web do curso de Tecnologia em Sistemas para Internet
 
-TECNOLOGIAS UTILIZADAS
+Tecnologias utilizadas
 
-LINGUAGEM DE PROGRAMAÇÃO JAVA 
+Linguagem de Programação Java 
 
-FRAMEWORK SPRING BOOT 
+Framework Spring Boot 
 
-BANCO DE DADOS MYSQL
+Banco de Dados mysql
+
+Templates - Vali-Admin - Bootstrap
+
+
 
