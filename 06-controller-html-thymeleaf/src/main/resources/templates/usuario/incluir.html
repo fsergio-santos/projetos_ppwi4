@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cadastro Usuário</title>
+<link rel="stylesheet" type="text/css" th:ref="@{/css/main.css}"></link>
+<link rel="stylesheet" type="text/css" th:ref="@{/css/font-awesome/css/font-awesome.css}"></link>
+</head>
+<body>
+  <form th:action="@{/usuario/incluir}" method="POST" th:object="${usuario}">
+  
+  		<label>Nome:</label>
+  		<input type="text" 
+  		       id="username" 
+  		       name="username" 
+  		       th:field="*{username}"/>
+  		<br/>
+  		<label>E-mail</label>
+  		<input type="text" 
+  		       id="email" 
+  		       name="email" 
+  		       th:field="*{email}"/>
+  		<br/>
+  		<label>Senha:</label>
+  		<input type="password" 
+  			   id="password" 
+  			   name="password" 
+  			   th:field="*{password}"/>
+  		<br/>
+  		<label>Confirma Senha:</label>
+  		<input type="password" 
+  		       id="confirmPassword" 
+  		       name="confirmPassword" 
+  		       th:field="*{confirmPassword}"/>
+  		<br/>
+  		<button>Inserir</button>
+  
+  </form>
+
+
+
+    <script type="text/javascript" th:src="@{/js/jquery/jquery-3.4.1.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap/bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+
+</body>
+</html>
