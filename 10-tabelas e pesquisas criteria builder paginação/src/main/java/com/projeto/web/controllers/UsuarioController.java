@@ -2,6 +2,7 @@ package com.projeto.web.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.projeto.models.config.ConfigProjeto;
@@ -33,6 +36,7 @@ import com.projeto.models.service.DepartamentoService;
 import com.projeto.models.service.UsuarioService;
 import com.projeto.models.service.exception.ConfirmeSenhaNaoInformadoException;
 import com.projeto.models.service.exception.EmailCadastradoException;
+import com.projeto.web.response.ResponseSelect2Data;
 
 @Controller
 @RequestMapping(value = "/usuario")
@@ -72,15 +76,8 @@ public class UsuarioController {
 		mv.addObject("dir", dir.orElse("asc"));
 		mv.addObject("sort", sort.orElse("id"));
 		mv.addObject("pagina", pagina);
-		
-
-		
 		return mv;
 	}
-
-	
-	
-
 
 	@RequestMapping(value = "/cadastro", method = RequestMethod.GET)
 	public String cadastroUsuario(Usuario usuario) {
@@ -143,15 +140,15 @@ public class UsuarioController {
 	}
 	
 	
-	
-	
-	
-	
-    @ModelAttribute("departamentos")
-	public List<Departamento> listDepartamento(){
-		return departamentoService.findAll();
+	@ResponseBody
+	@GetMapping(value="/buscaDepartamento")
+	public List<ResponseSelect2Data> selectDepartamento(@RequestParam(value="q", required = false) String query){
+		return StringUtils.isEmpty(query)
+				       ? departamentoService.buscaSemParamentro() 
+				       : departamentoService.buscaPorParametroDepartamento(query);
 	}
 	
+    
 	
 	private String getAtributte(Optional<String> sort) {
 		return sort.orElse("id");

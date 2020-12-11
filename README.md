@@ -13,5 +13,5 @@ Banco de Dados mysql
 
 Templates - Vali-Admin - Bootstrap
 
-
+Select2 Bootstrap thymeleaf
 
