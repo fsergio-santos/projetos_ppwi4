@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Cadastro Usuário</title>
+</head>
+<body>
+	<section layout:fragment="conteudo">
+		<div class="container">
+			<div th:replace="usuario/cabecalho"></div>
+			<div class="tile">
+				<div class="tile-body">
+					<form th:action="${usuario.id == null} ? 
+									 @{/usuario/incluir} : 
+									 @{/usuario/alterar}"
+						  method="POST" 
+						  th:object="${usuario}"
+						  id="formUsuario">
+						<div class="row">
+						   <div class="col-xs-12 col-sm-12 col-md-12">
+								<div th:replace="fragments/validacao :: validacao"></div>
+								<div th:replace="fragments/alert"></div>
+						   </div>
+						</div>  
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="form-group">
+									<label class="control-label">Nome:</label> <input type="text"
+										id="username" name="username" th:field="*{username}"
+										th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
+										class="form-control" />
+									<div class="invalid-feedback">
+										<span th:errors="*{username}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="form-group">
+									<label class="control-label">E-mail</label> <input type="text"
+										id="email" name="email" th:field="*{email}"
+										th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+										class="form-control" />
+									<div class="invalid-feedback">
+										<span th:errors="*{email}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="form-group">
+									<label class="control-label">Senha:</label> <input
+										type="password" id="password" name="password"
+										th:field="*{password}"
+										th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+										class="form-control" />
+									<div class="invalid-feedback">
+										<span th:errors="*{password}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="form-group">
+									<label class="control-label">Confirma Senha:</label> <input
+										type="password" id="confirmPassword" name="confirmPassword"
+										th:field="*{confirmPassword}"
+										th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+										class="form-control" />
+									<div class="invalid-feedback">
+										<span th:errors="*{confirmPassword}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="form-group">
+									<label class="control-label">Departamento:</label>
+									<select
+										id="selectDepartamento" 
+										name="departamento"
+										th:field="*{departamento}"
+										class="form-control dropdown-select-simple" >
+										<option th:each="departamento : ${departamentos}" 
+												th:value="${departamento.id}"
+												th:text="${departamento.nome}"
+												th:selected="${selected} eq ${departamento}"
+												th:classappend="${#fields.hasErrors('departamento.id')} ? 'is-invalid'"></option>
+									</select>	
+									<div class="invalid-feedback">
+										<span th:errors="*{departamento}"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<input type="hidden" 
+						  	   id="id" 
+						  	   name="id" 
+						  	   th:field="*{id}" />
+						<div class="tile-footer">
+							<button type="button" 
+									class="btn btn-primary"
+									id="btnModal">Salvar</button>
+							<a th:href="@{/usuario/listar}" class="btn btn-warning">Cancelar</a>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="modal modal-danger fade" id="myModal" tabindex="-1"
+			role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title text-center">Confirme a Alteração do
+							Registro!</h4>
+					</div>
+
+					<div class="modal-body">
+						<p class="text-center">Você tem certeza do que está fazendo?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="btnCancel" class="btn btn-success"
+							data-dismiss="modal">Não, Cancelar</button>
+						<button type="submit" id="confirmAction" class="btn btn-danger">Sim,
+							Alterar</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block layout:fragment="javascript-extra">
+			
+		<script>
+		
+		    $('#btnModal').on('click', function(event){
+		    	if ($('#id').val() != 0 ){
+		    		$('#myModal').modal();
+		    	} else {
+		    	   event.preventDefault();
+		    	   $('#formUsuario').submit();
+		    	}		
+		    });
+		
+		     
+		    $('#confirmAction').on('click', function(){
+		 	   event.preventDefault();
+	    	   $('#formUsuario').submit();
+	       });
+		
+		
+			$("#selectDepartamento").select2({
+                language : 'pt-BR',
+				ajax : {
+					url : '/usuario/buscaDepartamento',
+					dataType : 'json',
+					delay : 250,
+					data : function(params) {
+						return {
+							q : params.term
+						};
+					},
+					processResults : function(response) {
+						return {
+							results : response
+						};
+					},
+					cache : true
+				},
+
+			});
+		</script>
+	
+	
+	
+	
+	
+	</th:block>
+</body>
+</html>
