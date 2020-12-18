@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Sistema</title>
+</head>
+<body>
+	<section layout:fragment="conteudo">
+		<div class="container">
+			<div class="app-title">
+				<h1>
+					<i class="fa fa-edit">Cadastro de Usuários</i>
+				</h1>
+				<ul class="app-breadcrumb breadcrumb">
+					<li class="breadcrumb-item"><i class="fa fa-search fa-lg"></i></li>
+					<li class="breadcrumb-item"><a href="#">Menu</a></li>
+				</ul>
+			</div>
+			<div class="container">
+				<div class="tile">
+					<div class="tile-body">
+
+						<form class="form-inline" method="GET"
+							th:object="${usuarioFiltro}">
+							<div class="col-xs-12 col-sm-12">
+								<div class="form-group">
+									<label class="control-label col-sm-1">Nome:</label> <input
+										type="text" id="nome" name="nome"
+										class="form-control col-sm-9"
+										placeholder="Digite um nome para pesquisa" th:field="*{nome}" />
+									<div class="col-sm-2">
+										<button type="submit" class="btn btn-primary">
+											<i class="fa fa-search-plus"></i>
+										</button>
+									</div>
+								</div>
+
+							</div>
+
+						</form>
+
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-12">
+				<div th:replace="fragments/alert"></div>
+			</div>
+			<div class="tile">
+				<div class="tile-body">
+					<div class="form-group row col-md-10">
+						<label for="pageSizeSelect" class="col-form-label"> <b>Mostrar</b>
+						</label>
+						<div>
+							<select class="form-control pagination" id="pageSizeSelect">
+								<option th:each="pageSize :${pageSizes}" th:text="${pageSize}"
+									th:value="${pageSize}" th:selected="${pageSize} == ${size} "></option>
+							</select>
+						</div>
+					</div>
+					<table id="tabela" class="table table-stripped table-bordered table-hover">
+						<thead>
+							<tr class="p-3 mb-2 bg-primary text-white">
+							    <th style="font-weight: bold; text-align: center;">
+							       <a th:href="${pagina.urlOrdenada('id')}"
+							          th:remove="${pagina.vazia} ? tag">
+							          <span style="color:white;">Id</span>
+							          <span class="dropup" th:remove="${pagina.descendente('id')} ? tag"
+							          		th:if="${pagina.ordenada('id')}">
+							          		<span class="dropdown-toggle"></span>
+							          </span>
+							       </a>
+							    </th>
+							    <th style="font-weight: bold; text-align: center;">
+							       <a th:href="${pagina.urlOrdenada('username')}"
+							          th:remove="${pagina.vazia} ? tag">
+							          <span style="color:white;">Nome</span>
+							          <span class="dropup" th:remove="${pagina.descendente('username')} ? tag"
+							          		th:if="${pagina.ordenada('username')}">
+							          		<span class="dropdown-toggle"></span>
+							          </span>
+							       </a>
+							    </th>
+								<th style="font-weight: bold; text-align: center;">
+							       <a th:href="${pagina.urlOrdenada('email')}"
+							          th:remove="${pagina.vazia} ? tag">
+							          <span style="color:white;">Email</span>
+							          <span class="dropup" th:remove="${pagina.descendente('email')} ? tag"
+							          		th:if="${pagina.ordenada('email')}">
+							          		<span class="dropdown-toggle"></span>
+							          </span>
+							       </a>
+							    </th>
+								<th style="font-weight: bold; text-align: center;">Ações</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="usuario :${pagina.conteudo}">
+								<td th:text="${usuario.id}">1</td>
+								<td th:text="${usuario.username}">Roberto Carlos</td>
+								<td th:text="${usuario.email}">Roberto@Carlos.com.br</td>
+								<td><a class="btn btn-sm btn-info"
+									th:href="@{/usuario/alterar/{id} (id=${usuario.id})}"> <i
+										class="fa fa-pencil"></i>
+								</a> <a class="btn btn-sm btn-danger"
+									th:href="@{/usuario/excluir/{id} (id=${usuario.id})}"> <i
+										class="fa fa-trash"></i>
+								</a> <a class="btn btn-sm btn-primary"
+									th:href="@{/usuario/consultar/{id} (id=${usuario.id})}"> <i
+										class="fa fa-search"></i>
+								</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div th:replace="fragments/paginacao"></div>
+					<a class="btn btn-sm btn-success" th:href="@{/usuario/cadastro}">
+						<i class="fa fa-plus-circle"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block layout:fragment="javascript-extra">
+		<script>
+			
+			/*<![CDATA[*/
+				
+				var sort = /*[[${sort}]]*/ null;
+				var dir = /*[[${dir}]]*/ null;
+				var currentPage = /*[[${pagina.atual}]]*/ 0;
+				var pageSize = /*[[${pagina.size}]]*/ 0;
+				
+		    /*]]>*/
+		    
+		  	$(document).ready(function(){
+		  		changePageAndSize();
+	      	});
+	      	function changePageAndSize(){
+	      		$('#pageSizeSelect').change(function(event){
+	      			window.location.replace("/usuario/listar?size="+this.value+"&page="+currentPage+"&sort="+sort+"&dir="+dir);
+	      		});
+	      	} 
+     </script>
+	</th:block>
+</body>
+</html>
+
+
+<!-- <div class="row"> -->
+<!-- 	<div class="col-xs-12 col-sm-12 col-md-6"> -->
+<!-- 		<div class="form-inline"> -->
+<!-- 			<label for="pageSizeSelect" class="col-form-label"> <b>Mostrar:</b> -->
+<!-- 			</label> -->
+<!-- 			<div> -->
+<!-- 				<select class="form-control pagination" id="pageSizeSelect"> -->
+<!-- 					<option th:each="pageSize :${pageSizes}" th:text="${pageSize}" -->
+<!-- 						th:value="${pageSize}" th:selected="${pageSize} == ${size} "></option> -->
+<!-- 				</select> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<!-- 	<div class="col-xs-12 col-sm-12 col-md-6"> -->
+<!-- 		<form class="form-inline" method="GET" th:object="${usuarioFiltro}"> -->
+<!-- 			<label for="nome" class="col-form-label"><b>Nome:</b></label> <input -->
+<!-- 				type="text" id="nome" name="nome" class="form-control col-md-9" -->
+<!-- 				placeholder="Digite um nome para pesquisa" th:field="*{nome}" /> -->
+<!-- 			<button type="submit" class="btn btn-primary col-md-2"> -->
+<!-- 				<i class="fa fa-search-plus"></i> -->
+<!-- 			</button> -->
+<!-- 		</form> -->
+<!-- 	</div> -->
+<!-- </div> -->

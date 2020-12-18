@@ -1,0 +1,89 @@
+package com.projeto.models.service;
+
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.projeto.models.model.Usuario;
+import com.projeto.models.repository.UsuarioRepository;
+import com.projeto.models.repository.filtros.UsuarioFiltro;
+import com.projeto.models.service.exception.ConfirmeSenhaNaoInformadoException;
+import com.projeto.models.service.exception.EmailCadastradoException;
+import com.projeto.models.service.exception.IdNaoPodeSerZeroNuloException;
+import com.projeto.models.service.exception.DadoNaoCadastradoException;
+
+@Service
+@Transactional
+public class UsuarioService {
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+		
+	public Usuario save(Usuario usuario) {
+		
+		Optional<Usuario> usuarioCadastrado = findUsuarioByEmail(usuario.getEmail());
+		
+		if (usuarioCadastrado.isPresent() && !usuarioCadastrado.get().equals(usuario)){
+			throw new EmailCadastradoException("O e-mail já está cadastrado");
+		}
+	
+		if ( usuario.getConfirmPassword().equals("")) {
+			throw new ConfirmeSenhaNaoInformadoException("O campo confirme Senha deve ser preenchido");
+		}
+		
+		return usuarioRepository.save(usuario);
+	}
+	
+	public Usuario update(Usuario usuario) {
+		return save(usuario);
+	}
+	
+	public void deleteById(Long id) {
+		findById(id);
+		usuarioRepository.deleteById(id);
+	}
+	
+	@Transactional(readOnly = true)
+	public Usuario findById(Long id) {
+		if (id <=0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificados do Usuário inválido!");
+		}
+		return usuarioRepository.findUsuarioById(id)
+				.orElseThrow(()-> new DadoNaoCadastradoException("Usuário não cadastrado!"));
+	}
+	
+	
+	@Transactional(readOnly = true)
+	public Usuario findUserById(Long id) {
+		if (id <=0) {
+			throw new IdNaoPodeSerZeroNuloException("Identificados do Usuário inválido!");
+		}
+		return usuarioRepository.findUsuarioById(id)
+				.orElseThrow(()-> new DadoNaoCadastradoException("Usuário não cadastrado!"));
+	}
+	
+
+	@Transactional(readOnly = true)
+	public List<Usuario> findAll(){
+		return usuarioRepository.findAll();
+	}
+	
+	@Transactional(readOnly = true)
+	public Optional<Usuario> findUsuarioByEmail(String email){
+		return usuarioRepository.findUsuarioByEmail(email);
+	}
+
+	
+	public Page<Usuario> listUsuarioByPage(UsuarioFiltro usuarioFiltro, Pageable pageable){
+		return usuarioRepository.listUsuarioByPage(usuarioFiltro, pageable);
+	}
+	
+
+}
