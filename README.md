@@ -15,3 +15,7 @@ Templates - Vali-Admin - Bootstrap
 
 Select2 Bootstrap thymeleaf
 
+Biblioteca itext 
+
+Geração de relatórios com o Jasper Reports Studio 
+
